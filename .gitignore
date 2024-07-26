@@ -4,3 +4,7 @@ target/
 node_modules/
 src/main/frontend/generated/
 vite.generated.ts
+
+*.env
+/.idea/easy-i18n.xml
+/logs/

@@ -1,0 +1,76 @@
+server:
+  port: ${PORT:8080}
+  error:
+    whitelabel:
+      enabled: true
+application:
+  defaultValues:
+    lootDelay: 30
+discord:
+
+  cdnUrl: https://cdn.discordapp.com/
+  bot:
+    token: ${DISCORD_BOT_TOKEN}
+    clientId: ${DISCORD_CLIENT_ID}
+    permissions: ${DISCORD_BOT_PERMISSION}
+
+logging:
+  level:
+    org:
+      atmosphere: warn
+      springframework:
+        boot:
+          autoconfigure: ERROR
+
+spring:
+  application:
+    name: discord_dkp_bot
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_DB_ADDRESS}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      platform: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: true
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+        format_sql: true
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: embedded
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+  mustache:
+    check-template-location: false
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            redirect-uri: "{baseUrl}/login/oauth2/code/discord"
+            authorization-grant-type: authorization_code
+            client-id: ${DISCORD_CLIENT_ID}
+            client-name: A1nu-dev
+            client-secret: ${DISCORD_OAUTH_CLIENT_SECRET}
+            client-authentication-method: client_secret_post
+            scope: [ identify, guilds ]
+        provider:
+          discord:
+            authorization-uri: https://discord.com/oauth2/authorize
+            token-uri: https://discord.com/api/oauth2/token
+            user-info-uri: https://discordapp.com/api/users/@me
+            user-name-attribute: username
+
+vaadin:
+  launch-browser: true
+  allowed-packages: com.vaadin,org.vaadin,ee.a1nu.discord_dkp_bot

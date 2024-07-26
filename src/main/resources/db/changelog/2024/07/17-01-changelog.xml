@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+    <property name="uuid_function" value="gen_random_uuid()" dbms="postgresql"/>
+    <property name="now" value="NOW()" dbms="postgresql"/>
+    <changeSet id="xml-1" author="a1nu">
+        <insert tableName="encounter_weight">
+            <column name="id" type="uuid" valueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="version" value="1"/>
+            <column name="encounter_weight" value="0"/>
+            <column name="creator_snowflake" value="0"/>
+            <column name="created_date" valueDate="${now}"/>
+        </insert>
+    </changeSet>
+    <changeSet id="xml-2" author="a1nu">
+        <insert tableName="encounter_weight">
+            <column name="id" type="uuid" valueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="version" value="1"/>
+            <column name="encounter_weight" value="1"/>
+            <column name="creator_snowflake" value="0"/>
+            <column name="created_date" valueDate="${now}"/>
+        </insert>
+    </changeSet>
+    <changeSet id="xml-3" author="a1nu">
+        <insert tableName="encounter_weight">
+            <column name="id" type="uuid" valueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="version" value="1"/>
+            <column name="encounter_weight" value="2"/>
+            <column name="creator_snowflake" value="0"/>
+            <column name="created_date" valueDate="${now}"/>
+        </insert>
+    </changeSet>
+    <changeSet id="xml-4" author="a1nu">
+        <insert tableName="encounter_weight">
+            <column name="id" type="uuid" valueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="version" value="1"/>
+            <column name="encounter_weight" value="3"/>
+            <column name="creator_snowflake" value="0"/>
+            <column name="created_date" valueDate="${now}"/>
+        </insert>
+    </changeSet>
+    <changeSet id="xml-5" author="a1nu">
+        <insert tableName="encounter_weight">
+            <column name="id" type="uuid" valueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="version" value="1"/>
+            <column name="encounter_weight" value="4"/>
+            <column name="creator_snowflake" value="0"/>
+            <column name="created_date" valueDate="${now}"/>
+        </insert>
+    </changeSet>
+    <changeSet id="xml-6" author="a1nu">
+        <insert tableName="encounter_weight">
+            <column name="id" type="uuid" valueComputed="${uuid_function}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="version" value="1"/>
+            <column name="encounter_weight" value="5"/>
+            <column name="creator_snowflake" value="0"/>
+            <column name="created_date" valueDate="${now}"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
