@@ -33,6 +33,8 @@ public class GuildConfigurationMapper {
         if (guildConfiguration == null) {
             GuildEntity guildEntity = guildEntityService.getGuildEntity(guildId);
             guildConfiguration = guildConfigurationService.createGuildConfiguration(guildEntity);
+            guildEntity.setGuildConfiguration(guildConfiguration);
+            guildEntityService.updateGuild(guildEntity);
         }
         List<RoleDTO> roles = discordBotService.getGuildRoles(guildId)
                 .filter(role -> !role.isEveryone())

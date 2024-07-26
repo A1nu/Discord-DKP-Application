@@ -4,7 +4,7 @@ import {MainView} from "Frontend/views/MainView";
 import {ProtectedRoute} from "Frontend/util/ProtectedRoute";
 import ErrorView from "Frontend/views/ErrorView";
 import Layout from "Frontend/layout/Layout";
-import AdminSettings from "Frontend/views/AdminSettings";
+import AdminSettings from "Frontend/views/admin/AdminSettings";
 
 export const REDIRECT_PATH_KEY = 'redirectPath';
 

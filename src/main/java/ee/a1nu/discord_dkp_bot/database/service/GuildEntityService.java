@@ -25,4 +25,11 @@ public class GuildEntityService {
         guildEntity.setCreatorSnowflake(0L);
         return guildEntityRepository.save(guildEntity);
     }
+
+    public void updateGuild(GuildEntity guildEntity) {
+        if (!guildEntity.isNew()) {
+            guildEntity.setEditorSnowflake(0L);
+            guildEntityRepository.save(guildEntity);
+        }
+    }
 }

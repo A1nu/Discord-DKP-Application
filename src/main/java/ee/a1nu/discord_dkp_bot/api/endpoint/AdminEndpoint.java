@@ -13,7 +13,6 @@ import ee.a1nu.discord_dkp_bot.api.validator.ApplicationSettingsValidator;
 import ee.a1nu.discord_dkp_bot.database.model.GuildConfiguration;
 import ee.a1nu.discord_dkp_bot.database.repository.GuildConfigurationRepository;
 import ee.a1nu.discord_dkp_bot.database.service.GuildConfigurationService;
-import ee.a1nu.discord_dkp_bot.database.service.GuildEntityService;
 import jakarta.annotation.security.PermitAll;
 import oshi.util.tuples.Pair;
 
@@ -23,7 +22,6 @@ public class AdminEndpoint {
     private final PermissionValidationService permissionValidationService;
     private final SessionService sessionService;
     private final GuildConfigurationMapper guildConfigurationMapper;
-    private final GuildEntityService guildEntityService;
     private final ApplicationSettingsValidator applicationSettingsValidator;
     private final GuildConfigurationRepository guildConfigurationRepository;
     private final GuildConfigurationService guildConfigurationService;
@@ -32,12 +30,11 @@ public class AdminEndpoint {
             PermissionValidationService permissionValidationService,
             SessionService sessionService,
             GuildConfigurationMapper guildConfigurationMapper,
-            GuildEntityService guildEntityService, ApplicationSettingsValidator applicationSettingsValidator,
+            ApplicationSettingsValidator applicationSettingsValidator,
             GuildConfigurationRepository guildConfigurationRepository, GuildConfigurationService guildConfigurationService) {
         this.permissionValidationService = permissionValidationService;
         this.sessionService = sessionService;
         this.guildConfigurationMapper = guildConfigurationMapper;
-        this.guildEntityService = guildEntityService;
         this.applicationSettingsValidator = applicationSettingsValidator;
         this.guildConfigurationRepository = guildConfigurationRepository;
         this.guildConfigurationService = guildConfigurationService;
