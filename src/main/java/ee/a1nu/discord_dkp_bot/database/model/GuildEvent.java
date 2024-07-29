@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -22,4 +23,7 @@ public class GuildEvent extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
     List<EventAttendance> eventAttendance;
+
+    @Column(nullable = false, name = "event_date")
+    OffsetDateTime eventDate;
 }

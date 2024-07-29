@@ -24,10 +24,14 @@ public class Encounter extends BaseEntity {
     boolean primeEncounter;
 
     @JoinColumn(name = "encounter_weight", nullable = false)
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     Weight weight;
 
     @ManyToOne
     @JoinColumn(name = "guild_id", nullable = false)
     GuildEntity guild;
+
+    public boolean isEveryDay() {
+        return encounterSpawns.size() == 1 && encounterSpawns.stream().findFirst().get().isEveryday();
+    }
 }

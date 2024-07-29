@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaLiquibaseChangesConfig">
+    <exclude-change idName="spring_session_attributes_fk" tagName="dropForeignKeyConstraint" />
+    <exclude-change idName="oauth2_authorized_client" tagName="dropTable" />
+    <exclude-change idName="spring_session" tagName="dropTable" />
+    <exclude-change idName="spring_session_attributes" tagName="dropTable" />
+  </component>
+</project>

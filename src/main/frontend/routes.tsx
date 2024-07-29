@@ -4,7 +4,8 @@ import {MainView} from "Frontend/views/MainView";
 import {ProtectedRoute} from "Frontend/util/ProtectedRoute";
 import ErrorView from "Frontend/views/ErrorView";
 import Layout from "Frontend/layout/Layout";
-import AdminSettings from "Frontend/views/admin/AdminSettings";
+import AdminSettingsView from "Frontend/views/admin/AdminSettingsView";
+import EncountersView from "Frontend/views/admin/EncountersView";
 
 export const REDIRECT_PATH_KEY = 'redirectPath';
 
@@ -16,7 +17,8 @@ export const routes: RouteObject[] = [
             {path: '/login', element: <LoginView/>},
             {path: '*', element: <ErrorView/>},
             {path: '/', element: <ProtectedRoute component={<MainView/>}/>},
-            {path: '/:guildId/admin/settings', element: <ProtectedRoute component={<AdminSettings/>}/>}
+            {path: '/:guildId/admin/settings', element: <ProtectedRoute component={<AdminSettingsView/>}/>},
+            {path: '/:guildId/admin/encounters', element: <ProtectedRoute component={<EncountersView/>}/>}
         ]
     }
 ] as RouteObject[];

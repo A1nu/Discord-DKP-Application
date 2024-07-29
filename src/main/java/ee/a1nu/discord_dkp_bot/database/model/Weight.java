@@ -12,5 +12,5 @@ import lombok.Setter;
 @Setter
 public class Weight extends BaseEntity {
     @Column(nullable = false, unique = true, name = "encounter_weight")
-    Integer weight;
+    byte weight;
 }

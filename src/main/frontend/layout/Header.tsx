@@ -4,8 +4,10 @@ import {translate} from "Frontend/i18n";
 import Button from '@mui/material/Button';
 import {Scope} from "Frontend/util/Scope";
 import UserInfoDropdown from "Frontend/components/UserInfoDropdown";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import NavigationDropdown from "Frontend/components/NavigationDropdown";
+import {useAuth} from "Frontend/useAuth";
+import {parseUrl} from "Frontend/util/urlParser";
 
 export type NavigationElementProps = {
     translationKey: string;
@@ -25,7 +27,6 @@ const navigations: NavigationElementProps[] = [
     {
         translationKey: "navbar.dashboard",
         url: "/",
-        scope: Scope.USER,
     },
     {
         translationKey: "navbar.events",
@@ -57,16 +58,20 @@ const adminPanel: NavigationDropdownProps = {
 
 function Header() {
     const navigate = useNavigate();
+    const {authenticated} = useAuth();
+    const {guildId} = useParams()
 
 
-    const fillUrlPlaceholder = (url: string) => {
-        return url;
-    }
 
     const getNavButton = (navigation: NavigationElementProps) => {
         const {translationKey, url} = navigation;
+
         const redirect = (url: string) => {
-            navigate(fillUrlPlaceholder(url))
+            navigate(parseUrl(url, guildId))
+        }
+
+        if (navigation.scope && !guildId) {
+            return
         }
 
         return (
@@ -96,14 +101,20 @@ function Header() {
                             fontWeight: 700,
                             color: 'inherit',
                             textDecoration: 'none',
+                            position: "absolute"
                         }}>
                         {translate('app.name')}
                     </Typography>
                     <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'center'}}>
-                        {navigations.map((navigation: NavigationElementProps) => (
-                            getNavButton(navigation)
-                        ))}
-                        <NavigationDropdown translationKey={adminPanel.translationKey} children={adminPanel.children}/>
+                        {authenticated && (
+                            <>
+                                {navigations.map((navigation: NavigationElementProps) => (
+                                    getNavButton(navigation)
+                                ))}
+                                {guildId && (<NavigationDropdown translationKey={adminPanel.translationKey}
+                                                                 children={adminPanel.children}/>)}
+                            </>
+                        )}
                     </Box>
                     <Box sx={{flexGrow: 0}}>
                         <UserInfoDropdown/>

@@ -6,6 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <include file="schema/spring_session_schema.sql" relativeToChangelogFile="true"/>
     <include file="schema/oauth2_authorized_client_schema.sql" relativeToChangelogFile="true"/>
-    <include file="db/changelog/2024/07/15-01-changelog.sql"/>
+    <include file="db/changelog/2024/07/29-01-changelog.xml"/>
     <include file="db/changelog/2024/07/17-01-changelog.xml"/>
 </databaseChangeLog>

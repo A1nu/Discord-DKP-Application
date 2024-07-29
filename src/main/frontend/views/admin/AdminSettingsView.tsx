@@ -25,7 +25,7 @@ import ApplicationConfigurationDTO
 import Button from "@mui/material/Button";
 import ResponseDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/ResponseDTO";
 
-export default function AdminSettings() {
+export default function AdminSettingsView() {
     const {guildId} = useParams()
     const [guildConfiguration, setGuildConfiguration] = useState<ApplicationConfigurationDTO>({
         administratorRoleSnowflake: "",
@@ -98,11 +98,13 @@ export default function AdminSettings() {
 
         <Container fixed sx={{height: "90vh", display: "flex", flexDirection: "column", alignItems: "center", my: 6}}>
             {loading && <CircularProgress/>}
-            {!loading && (
+            {(!loading && !guildConfiguration.id) &&
+                <Alert variant="outlined" severity="error">{translate("error.genericError")}</Alert>}
+            {(!loading && guildConfiguration.id) && (
                 <Box sx={{display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
                     <Typography variant="h5" component="div"
                                 noWrap>{guildConfiguration?.guildName + translate("admin.settings.guildName")}</Typography>
-                    <FormControl sx={{m: 2, width: 300}}>
+                    <FormControl variant="standard" sx={{m: 2, width: 300}}>
                         <InputLabel id="admin-select-label">{translate("admin.settings.adminRole")}</InputLabel>
                         <Select
                             labelId="admin-select-label"
@@ -120,7 +122,7 @@ export default function AdminSettings() {
                         </Select>
                         <FormHelperText>{translate("admin.settings.adminRoleHelper")}</FormHelperText>
                     </FormControl>
-                    <FormControl sx={{m: 2, width: 300}}>
+                    <FormControl variant="standard" sx={{m: 2, width: 300}}>
                         <InputLabel id="moderator-select-label">{translate("admin.settings.moderatorRole")}</InputLabel>
                         <Select
                             labelId="moderator-select-label"
@@ -135,7 +137,7 @@ export default function AdminSettings() {
                         </Select>
                         <FormHelperText>{translate("admin.settings.moderatorRoleHelper")}</FormHelperText>
                     </FormControl>
-                    <FormControl sx={{m: 2, width: 300}}>
+                    <FormControl variant="standard" sx={{m: 2, width: 300}}>
                         <InputLabel id="member-select-label">{translate("admin.settings.memberRole")}</InputLabel>
                         <Select
                             labelId="member-select-label"
@@ -165,7 +167,7 @@ export default function AdminSettings() {
                             value={guildConfiguration?.lootPretendingDaysDelay}
                             onChange={handleDaysDelayChange}
                             label={translate("admin.settings.daysToObtainLootLabel")}
-                            variant="outlined"/>
+                            variant="standard"/>
                         <FormHelperText>{translate("admin.settings.daysToObtainLootHelper")}</FormHelperText>
                     </FormGroup>
                     <Button variant="outlined" onClick={saveForm}>{translate("admin.settings.saveButton")}</Button>

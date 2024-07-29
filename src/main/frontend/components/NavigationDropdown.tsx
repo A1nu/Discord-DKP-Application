@@ -3,7 +3,7 @@ import {FC} from 'react';
 import Button from "@mui/material/Button";
 import {translate} from "Frontend/i18n";
 import {Divider, Menu, MenuItem, Typography} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {parseUrl} from "Frontend/util/urlParser";
 import {NavigationDropdownProps, NavigationElementProps} from "Frontend/layout/Header";
 
@@ -11,7 +11,9 @@ import {NavigationDropdownProps, NavigationElementProps} from "Frontend/layout/H
 const NavigationDropdown: FC<NavigationDropdownProps> = (props: NavigationDropdownProps) => {
     const [anchorElDropdown, setAnchorElDropdown] = React.useState<null | HTMLElement>(null);
     const navigate = useNavigate();
+    const {guildId} = useParams()
 
+    // noinspection TypeScriptValidateTypes
     const open = Boolean(anchorElDropdown);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorElDropdown(event.currentTarget);
@@ -21,7 +23,8 @@ const NavigationDropdown: FC<NavigationDropdownProps> = (props: NavigationDropdo
     };
 
     const redirect = (url: string) => {
-        navigate(parseUrl(url));
+        setAnchorElDropdown(null);
+        navigate(parseUrl(url, guildId))
     }
 
     const generateDropdownItems = (children: NavigationElementProps[] | undefined) => {

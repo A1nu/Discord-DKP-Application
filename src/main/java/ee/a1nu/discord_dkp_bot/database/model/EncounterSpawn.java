@@ -17,6 +17,9 @@ public class EncounterSpawn extends BaseEntity {
     @ManyToOne
     Encounter encounter;
 
+    @Column(name = "everyday")
+    boolean everyday;
+
     @Column(name = "day_of_week")
     @Enumerated(EnumType.STRING)
     DayOfWeek dayOfWeek;

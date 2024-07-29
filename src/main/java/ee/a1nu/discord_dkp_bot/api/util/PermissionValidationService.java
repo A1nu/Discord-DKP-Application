@@ -18,6 +18,17 @@ public class PermissionValidationService {
 
     public boolean hasAdministrativePermission(Long guildId, Long memberId) {
 
-        return discordBotService.isMemberAdministrator(Snowflake.of(memberId), Snowflake.of(guildId)) || discordBotService.isMemberHasAdministrativeRole(Snowflake.of(memberId), Snowflake.of(guildId));
+        return discordBotService.isMemberAdministrator(Snowflake.of(memberId), Snowflake.of(guildId)) ||
+                discordBotService.isMemberHasAdministrativeRoleAccess(Snowflake.of(memberId), Snowflake.of(guildId));
+    }
+
+    public boolean hasModerationPermissions(Long guildId, Long memberId) {
+        return discordBotService.isMemberAdministrator(Snowflake.of(memberId), Snowflake.of(guildId)) ||
+                discordBotService.isMemberHasModerationRoleAccess(Snowflake.of(memberId), Snowflake.of(guildId));
+    }
+
+    public boolean hasMemberPermission(Long memberId, Long guildId) {
+        return discordBotService.isMemberAdministrator(Snowflake.of(memberId), Snowflake.of(guildId)) ||
+                discordBotService.isMemberHasMemberRoleAccess(Snowflake.of(memberId), Snowflake.of(guildId));
     }
 }

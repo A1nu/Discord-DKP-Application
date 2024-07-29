@@ -38,14 +38,14 @@ public class GuildConfigurationMapper {
         }
         List<RoleDTO> roles = discordBotService.getGuildRoles(guildId)
                 .filter(role -> !role.isEveryone())
-                .map(r -> new RoleDTO(r.getId().asLong(), r.getName()))
+                .map(r -> new RoleDTO(r.getId().asString(), r.getName()))
                 .collectSortedList(Comparator.comparing(RoleDTO::name))
                 .block();
 
         return new ApplicationConfigurationDTO(
                 guildConfiguration.getId(),
                 String.valueOf(guildConfiguration.getAdministratorRoleSnowflake()),
-                String.valueOf(guildConfiguration.getModeratorRoleSnowflake()),
+                String.valueOf(guildConfiguration.getMemberRoleSnowflake()),
                 String.valueOf(guildConfiguration.getModeratorRoleSnowflake()),
                 guildConfiguration.isStashEnabled(),
                 guildConfiguration.isAttendanceEnabled(),

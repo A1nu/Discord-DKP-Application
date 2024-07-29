@@ -30,4 +30,8 @@ public class GuildConfiguration extends BaseEntity {
 
     @Column(name = "loot_pretending_days_delay")
     int lootPretendingDaysDelay;
+
+    public boolean hasRolesDefined() {
+        return administratorRoleSnowflake != null && memberRoleSnowflake != null && moderatorRoleSnowflake != null;
+    }
 }

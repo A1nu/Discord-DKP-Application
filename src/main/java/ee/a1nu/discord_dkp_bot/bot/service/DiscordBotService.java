@@ -37,11 +37,11 @@ public class DiscordBotService {
                 Objects.requireNonNull(member.flatMap(Member::getBasePermissions).block()).contains(Permission.ADMINISTRATOR);
     }
 
-    public boolean isMemberHasAdministrativeRole(Snowflake memberSnowflake, Snowflake guildSnowflake) {
+    public boolean isMemberHasAdministrativeRoleAccess(Snowflake memberSnowflake, Snowflake guildSnowflake) {
         Mono<Member> member = getMember(memberSnowflake, guildSnowflake);
         GuildConfiguration guildConfiguration = guildConfigurationService.getGuildConfiguration(guildSnowflake.asLong());
 
-        if (guildConfiguration != null && guildConfiguration.getAdministratorRoleSnowflake() != null) {
+        if (guildConfiguration != null && guildConfiguration.hasRolesDefined()) {
             return Boolean.TRUE.equals(member.map(Member::getRoleIds).filter(r -> r.contains(Snowflake.of(guildConfiguration.getAdministratorRoleSnowflake()))).hasElement().block());
         }
 
@@ -58,5 +58,34 @@ public class DiscordBotService {
 
     public String getGuildName(Long guildId) {
         return gatewayDiscordClient.getGuildById(Snowflake.of(guildId)).map(Guild::getName).block();
+    }
+
+    public boolean isMemberHasModerationRoleAccess(Snowflake memberSnowflake, Snowflake guildSnowflake) {
+        Mono<Member> member = getMember(memberSnowflake, guildSnowflake);
+        GuildConfiguration guildConfiguration = guildConfigurationService.getGuildConfiguration(guildSnowflake.asLong());
+        if (guildConfiguration != null && guildConfiguration.hasRolesDefined()) {
+            Snowflake administratorRoleSnowflake = Snowflake.of(guildConfiguration.getAdministratorRoleSnowflake());
+            Snowflake moderatorRoleSnowflake = Snowflake.of(guildConfiguration.getModeratorRoleSnowflake());
+
+            return Boolean.TRUE.equals(member.map(Member::getRoleIds).filter(r -> r.contains(administratorRoleSnowflake) || r.contains(moderatorRoleSnowflake)).hasElement().block());
+        }
+        return false;
+    }
+
+    public boolean isMemberHasMemberRoleAccess(Snowflake memberSnowflake, Snowflake guildSnowflake) {
+        Mono<Member> member = getMember(memberSnowflake, guildSnowflake);
+        GuildConfiguration guildConfiguration = guildConfigurationService.getGuildConfiguration(guildSnowflake.asLong());
+
+        if (guildConfiguration != null && guildConfiguration.hasRolesDefined()) {
+            Snowflake administratorRoleSnowflake = Snowflake.of(guildConfiguration.getAdministratorRoleSnowflake());
+            Snowflake moderatorRoleSnowflake = Snowflake.of(guildConfiguration.getModeratorRoleSnowflake());
+            Snowflake memberRoleSnowflake = Snowflake.of(guildConfiguration.getMemberRoleSnowflake());
+
+            return Boolean.TRUE.equals(
+                    member.map(Member::getRoleIds)
+                            .filter(r -> r.contains(administratorRoleSnowflake) || r.contains(moderatorRoleSnowflake) || r.contains(memberRoleSnowflake))
+                            .hasElement().block());
+        }
+        return false;
     }
 }

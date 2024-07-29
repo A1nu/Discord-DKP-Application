@@ -2,7 +2,6 @@ import * as React from 'react';
 import {Avatar, Divider, IconButton, Menu, MenuItem, Typography} from "@mui/material";
 import {translate} from "Frontend/i18n";
 import {useNavigate} from "react-router-dom";
-import {parseUrl} from "Frontend/util/urlParser";
 import {useAuth} from "Frontend/useAuth";
 import Button from "@mui/material/Button";
 import {NavigationElementProps} from "Frontend/layout/Header";
@@ -29,9 +28,10 @@ function UserInfoDropdown() {
     };
 
     const redirect = (url: string) => {
-        navigate(parseUrl(url));
+        navigate(url);
     }
 
+    // noinspection TypeScriptValidateTypes
     return authenticated ? (
             <>
                 <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>

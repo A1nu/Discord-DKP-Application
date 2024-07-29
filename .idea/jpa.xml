@@ -4,4 +4,13 @@
     <option name="defaultUnitInitialized" value="true" />
     <option name="renamerInitialized" value="true" />
   </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default" defaultIncludeChangeLogFile="src/main/resources/db/changelog/changelog-master.xml">
+        <packages>
+          <package value="ee.a1nu.discord_dkp_bot" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
 </project>

@@ -19,25 +19,37 @@ public class GuildEntity {
     @Id
     @Column(name = "snowflake", nullable = false, updatable = false)
     Long snowflake;
+
     @Column(name = "creator_snowflake", nullable = false, updatable = false)
     Long creatorSnowflake;
+
     @Column(name = "editor_snowflake")
     Long editorSnowflake;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "guild", orphanRemoval = true)
     Set<GuildMember> guildMembers;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "guild", orphanRemoval = true)
     Set<GuildEvent> guildEvents;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "guild_configuration_id")
     GuildConfiguration guildConfiguration;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "guild", orphanRemoval = true)
     Set<PersonalizedItem> guildItems;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "guild", orphanRemoval = true)
+    Set<Encounter> guildEncounters;
+
     @Version
     private Long version;
+
     @CreationTimestamp
     @Column(updatable = false)
     @JsonIgnore
     private Instant createdDate;
+
     @UpdateTimestamp
     @JsonIgnore
     private Instant lastModifiedDate;
@@ -52,9 +64,5 @@ public class GuildEntity {
         } else {
             this.editorSnowflake = editorSnowflake;
         }
-    }
-
-    public boolean isCreatedByUser() {
-        return creatorSnowflake != 0;
     }
 }
