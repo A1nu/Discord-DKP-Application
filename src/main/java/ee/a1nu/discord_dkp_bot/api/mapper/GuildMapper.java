@@ -3,7 +3,7 @@ package ee.a1nu.discord_dkp_bot.api.mapper;
 import discord4j.core.object.entity.Guild;
 import discord4j.rest.util.Image;
 import ee.a1nu.discord_dkp_bot.api.dto.DashboardGuildDto;
-import ee.a1nu.discord_dkp_bot.api.util.PermissionValidationService;
+import ee.a1nu.discord_dkp_bot.api.service.PermissionValidationService;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 

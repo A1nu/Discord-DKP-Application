@@ -17,6 +17,9 @@ public class Encounter extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "encounter", orphanRemoval = true)
     Set<EncounterSpawn> encounterSpawns;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "encounter", orphanRemoval = true)
+    Set<GuildEvent> guildEvents;
+
     @Column(name = "scheduled_encounter")
     boolean scheduledEncounter;
 

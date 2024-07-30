@@ -24,6 +24,6 @@ public class EncounterSpawn extends BaseEntity {
     @Enumerated(EnumType.STRING)
     DayOfWeek dayOfWeek;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "encounterSpawn", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "encounterSpawn", orphanRemoval = true)
     Set<SpawnTime> encounterTimeSet;
 }

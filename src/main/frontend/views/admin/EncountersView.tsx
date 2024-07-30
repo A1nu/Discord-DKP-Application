@@ -42,6 +42,7 @@ import ResponseDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/Resp
 import CircleIcon from '@mui/icons-material/Circle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import BoltIcon from '@mui/icons-material/Bolt';
 
 const initialEncounter: EncounterDTO = {
     onFriday: false,
@@ -51,21 +52,23 @@ const initialEncounter: EncounterDTO = {
     onThursday: false,
     onTuesday: false,
     onWednesday: false,
-    fridaySpawns: [{hour: 0, minute: 0}],
+    fridaySpawns: [],
     id: "",
-    mondaySpawns: [{hour: 0, minute: 0}],
+    mondaySpawns: [],
     name: "",
     primeEncounter: false,
     everyDay: false,
-    everyDaySpawns: [{hour: 0, minute: 0}],
-    saturdaySpawns: [{hour: 0, minute: 0}],
+    everyDaySpawns: [],
+    saturdaySpawns: [],
     scheduledEncounter: false,
-    sundaySpawns: [{hour: 0, minute: 0}],
-    thursdaySpawns: [{hour: 0, minute: 0}],
-    tuesdaySpawns: [{hour: 0, minute: 0}],
-    wednesdaySpawns: [{hour: 0, minute: 0}],
+    sundaySpawns: [],
+    thursdaySpawns: [],
+    tuesdaySpawns: [],
+    wednesdaySpawns: [],
     weight: 0
 }
+
+const deleteModalInitialState = {open: false, id: ""}
 
 export default function EncountersView() {
     const {guildId} = useParams()
@@ -74,6 +77,7 @@ export default function EncountersView() {
     const [encountersData, setEncountersData] = useState<EncountersDataDTO>({});
     const {guildName, weights, encounters} = encountersData;
     const [response, setResponse] = useState<ResponseDTO>({responseType: "", message: ""});
+    const [deleteModal, setDeleteModal] = useState<{ open: boolean, id: string }>(deleteModalInitialState);
 
     const [encounter, setEncounter] = useState<EncounterDTO>(initialEncounter)
 
@@ -104,6 +108,14 @@ export default function EncountersView() {
         setEncounter(initialEncounter)
     }
 
+    const handleDeleteModalOpen = (id: string | undefined) => {
+        if (id !== undefined) {
+            setDeleteModal({open: true, id: id})
+        }
+    }
+
+    const handleCloseDeleteModal = () => setDeleteModal({open: false, id: ""})
+
     const handleEdit = (id: string | undefined) => {
         if (id === undefined) {
             return
@@ -114,15 +126,12 @@ export default function EncountersView() {
         }
     }
 
-    const handleDelete = async (id: string | undefined) => {
-        if (id === undefined) {
-            return
-        }
-        try {
-            const response = AdminEndpoint.deleteEncounter(guildId, id);
-        } finally {
+    const handleDelete = async () => {
+        handleCloseDeleteModal();
+        const response = AdminEndpoint.deleteEncounter(guildId, deleteModal.id);
+        response.then(() => {
             fetchEncounters();
-        }
+        })
     }
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setEncounter({
@@ -264,7 +273,7 @@ export default function EncountersView() {
                                 noWrap>{guildName + translate("admin.encounters.title")}</Typography>
                 </Box>
             )}
-            {(encountersData && Array.isArray(encountersData.encounters)) && (
+            {(encountersData && (encounters as EncounterDTO[])?.length > 0) && (
                 <Box sx={{
                     display: "flex",
                     justifyContent: "center",
@@ -311,7 +320,8 @@ export default function EncountersView() {
                                         </TableCell>
                                         <TableCell align="right">
                                             <Typography variant="body2" color="textSecondary"
-                                                        component="div">{encounter?.primeEncounter ? encounter.weight : "-"}</Typography>
+                                                        component="div">{(encounter?.primeEncounter && encounter?.weight > 0) ? [...Array(encounter.weight)].map((v, i) => (
+                                                <BoltIcon key={i}/>)) : "-"}</Typography>
                                         </TableCell>
                                         <TableCell align="right">
                                             <Box sx={{display: "flex", justifyContent: "end", alignItems: "center"}}>
@@ -326,7 +336,7 @@ export default function EncountersView() {
                                                     handleEdit(encounter?.id)
                                                 }}><EditIcon/></IconButton>
                                                 <IconButton onClick={() => {
-                                                    handleDelete(encounter?.id)
+                                                    handleDeleteModalOpen(encounter?.id)
                                                 }}><DeleteForeverIcon/></IconButton>
                                             </Box>
                                         </TableCell>
@@ -492,6 +502,28 @@ export default function EncountersView() {
                     )}
                     <Button onClick={handleClose}>{translate("admin.encounters.cancelButtonLabel")}</Button>
                     <Button onClick={handleSave}>{translate("admin.encounters.saveButtonLabel")}</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={deleteModal.open}
+                onClose={handleCloseDeleteModal}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {translate("admin.encounters.deleteModalTitle")}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {translate("admin.encounters.deleteModalText")}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => handleCloseDeleteModal()}>{translate("admin.encounters.deleteModalCancel")}</Button>
+                    <Button onClick={() => handleDelete()}>
+                        {translate("admin.encounters.deleteModalProceed")}
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Container>

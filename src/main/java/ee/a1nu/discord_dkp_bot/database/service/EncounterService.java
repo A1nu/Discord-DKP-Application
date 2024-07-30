@@ -5,6 +5,7 @@ import ee.a1nu.discord_dkp_bot.database.model.Encounter;
 import ee.a1nu.discord_dkp_bot.database.repository.EncounterRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -29,5 +30,9 @@ public class EncounterService {
 
     public boolean isExistByName(EncounterDTO dto, Long guildId) {
         return encounterRepository.existsByGuild_SnowflakeAndName(guildId, dto.name());
+    }
+
+    public Set<Encounter> getScheduledEncounters(Long guildId) {
+        return encounterRepository.findAllByGuild_SnowflakeAndScheduledEncounter(guildId, true);
     }
 }

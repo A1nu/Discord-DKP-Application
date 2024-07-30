@@ -6,17 +6,20 @@ import com.vaadin.hilla.exception.EndpointException;
 import ee.a1nu.discord_dkp_bot.api.dto.*;
 import ee.a1nu.discord_dkp_bot.api.mapper.EncounterMapper;
 import ee.a1nu.discord_dkp_bot.api.mapper.GuildConfigurationMapper;
+import ee.a1nu.discord_dkp_bot.api.service.PermissionValidationService;
 import ee.a1nu.discord_dkp_bot.api.service.SessionService;
-import ee.a1nu.discord_dkp_bot.api.util.PermissionValidationService;
+import ee.a1nu.discord_dkp_bot.api.util.Action;
+import ee.a1nu.discord_dkp_bot.api.util.ChangeContext;
 import ee.a1nu.discord_dkp_bot.api.validator.ApplicationSettingsValidator;
 import ee.a1nu.discord_dkp_bot.api.validator.EncounterValidator;
 import ee.a1nu.discord_dkp_bot.database.model.Encounter;
 import ee.a1nu.discord_dkp_bot.database.model.GuildConfiguration;
 import ee.a1nu.discord_dkp_bot.database.model.GuildEntity;
-import ee.a1nu.discord_dkp_bot.database.repository.GuildConfigurationRepository;
+import ee.a1nu.discord_dkp_bot.database.model.Transaction;
 import ee.a1nu.discord_dkp_bot.database.service.EncounterService;
 import ee.a1nu.discord_dkp_bot.database.service.GuildConfigurationService;
 import ee.a1nu.discord_dkp_bot.database.service.GuildEntityService;
+import ee.a1nu.discord_dkp_bot.database.service.TransactionService;
 import jakarta.annotation.security.PermitAll;
 import oshi.util.tuples.Pair;
 
@@ -29,32 +32,31 @@ public class AdminEndpoint {
     private final SessionService sessionService;
     private final GuildConfigurationMapper guildConfigurationMapper;
     private final ApplicationSettingsValidator applicationSettingsValidator;
-    private final GuildConfigurationRepository guildConfigurationRepository;
     private final GuildConfigurationService guildConfigurationService;
     private final EncounterMapper encounterMapper;
     private final EncounterValidator encounterValidator;
     private final EncounterService encounterService;
     private final GuildEntityService guildEntityService;
+    private final TransactionService transactionService;
 
     public AdminEndpoint(
             PermissionValidationService permissionValidationService,
             SessionService sessionService,
             GuildConfigurationMapper guildConfigurationMapper,
             ApplicationSettingsValidator applicationSettingsValidator,
-            GuildConfigurationRepository guildConfigurationRepository,
             GuildConfigurationService guildConfigurationService,
             EncounterMapper encounterMapper,
-            EncounterValidator encounterValidator, EncounterService encounterService, GuildEntityService guildEntityService) {
+            EncounterValidator encounterValidator, EncounterService encounterService, GuildEntityService guildEntityService, TransactionService transactionService) {
         this.permissionValidationService = permissionValidationService;
         this.sessionService = sessionService;
         this.guildConfigurationMapper = guildConfigurationMapper;
         this.applicationSettingsValidator = applicationSettingsValidator;
-        this.guildConfigurationRepository = guildConfigurationRepository;
         this.guildConfigurationService = guildConfigurationService;
         this.encounterMapper = encounterMapper;
         this.encounterValidator = encounterValidator;
         this.encounterService = encounterService;
         this.guildEntityService = guildEntityService;
+        this.transactionService = transactionService;
     }
 
     public ApplicationConfigurationDTO getGuildConfiguration(String guildId) throws EndpointException {
@@ -75,11 +77,16 @@ public class AdminEndpoint {
             return new ResponseDTO(ResponseType.ERROR.toString(), validateData.getB());
         }
 
+        Transaction transaction = new Transaction();
+
         GuildConfiguration updatedGuildConfiguration = guildConfigurationMapper.mapDtoToEntity(guildConfiguration, configuration);
 
         updatedGuildConfiguration.setEditorSnowflake(sessionService.getUserId());
-        guildConfigurationRepository.save(guildConfiguration);
-
+        transactionService.saveTransaction(
+                guildConfiguration.getEditorSnowflake(),
+                ChangeContext.CONFIGURATION,
+                guildConfigurationService.save(guildConfiguration).getId().toString(),
+                Action.UPDATE);
         return new ResponseDTO(ResponseType.SUCCESS.toString(), "");
     }
 
@@ -115,15 +122,20 @@ public class AdminEndpoint {
                 encounter = encounterService.getEncounter(UUID.fromString(encounterDTO.id()));
             }
 
-
-            encounterService.saveEncounter(
-                    encounterMapper.mapDtoToEntity(
-                            encounterDTO,
-                            encounter,
-                            Long.parseLong(guildId),
-                            sessionService.getUserId()
-                    )
+            transactionService.saveTransaction(
+                    sessionService.getUserId(),
+                    ChangeContext.ENCOUNTER,
+                    encounterService.saveEncounter(
+                            encounterMapper.mapDtoToEntity(
+                                    encounterDTO,
+                                    encounter,
+                                    Long.parseLong(guildId),
+                                    sessionService.getUserId()
+                            )
+                    ).getId().toString(),
+                    encounterDTO.id().isEmpty() ? Action.CREATE : Action.UPDATE
             );
+
 
             return new ResponseDTO(ResponseType.SUCCESS.toString(), "");
         } catch (IllegalArgumentException e) {
@@ -135,6 +147,7 @@ public class AdminEndpoint {
         if (!permissionValidationService.hasAdministrativePermission(Long.parseLong(guildId), sessionService.getUserId())) {
             throw new EndpointException(new AccessDeniedException());
         }
+        transactionService.saveTransaction(sessionService.getUserId(), ChangeContext.ENCOUNTER, UUID.fromString(encounterId).toString(), Action.DELETE);
         encounterService.deleteEncounter(UUID.fromString(encounterId));
         return new ResponseDTO(ResponseType.SUCCESS.toString(), "");
     }

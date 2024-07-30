@@ -13,6 +13,8 @@ import ee.a1nu.discord_dkp_bot.database.service.WeightService;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
+import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -57,7 +59,7 @@ public class EncounterMapper {
 
                     return mapEncounterToDtoByDays(encounter);
                 }
-        ).toList();
+        ).sorted(Comparator.comparing(EncounterDTO::name)).toList();
     }
 
     private EncounterDTO mapEncounterToDtoByDays(Encounter encounter) {
@@ -130,8 +132,8 @@ public class EncounterMapper {
         return encounterSpawn.getEncounterTimeSet()
                 .stream()
                 .map(ts ->
-                        new HourMinuteDTO((byte) ts.getTime().getHour(), (byte) ts.getTime().getMinute())
-                )
+                        new HourMinuteDTO((byte) ts.getTime().withOffsetSameInstant(ZoneOffset.ofHours(-3)).getHour(), (byte) ts.getTime().withOffsetSameInstant(ZoneOffset.ofHours(-3)).getMinute())
+                ).sorted(Comparator.comparing(HourMinuteDTO::hour))
                 .toList();
     }
 
@@ -143,7 +145,7 @@ public class EncounterMapper {
         return encounterSpawn.get().getEncounterTimeSet()
                 .stream()
                 .map(ts ->
-                        new HourMinuteDTO((byte) ts.getTime().getHour(), (byte) ts.getTime().getMinute())
+                        new HourMinuteDTO((byte) ts.getTime().withOffsetSameInstant(ZoneOffset.ofHours(-3)).getHour(), (byte) ts.getTime().withOffsetSameInstant(ZoneOffset.ofHours(-3)).getMinute())
                 )
                 .toList();
     }

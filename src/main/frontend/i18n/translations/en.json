@@ -70,5 +70,10 @@
   "admin.encounters.table.thursday": "Th",
   "admin.encounters.table.friday": "Fr",
   "admin.encounters.table.saturday": "Sa",
-  "admin.encounters.table.sunday": "Su"
+  "admin.encounters.table.sunday": "Su",
+  "admin.encounters.deleteModalTitle": "Are you sure you want to delete Encounter?",
+  "admin.encounters.deleteModalText": "This action will delete encounter and all events related to it, maybe better to edit existing, if you want to change something",
+  "admin.encounters.deleteModalCancel": "Cancel",
+  "admin.encounters.deleteModalProceed": "I know what i am doing",
+  "events.title": "'s Events"
 }

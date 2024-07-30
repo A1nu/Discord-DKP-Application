@@ -1,11 +1,12 @@
 package ee.a1nu.discord_dkp_bot.database.model;
 
+import ee.a1nu.discord_dkp_bot.api.util.EventStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,8 +23,14 @@ public class GuildEvent extends BaseEntity {
     GuildEntity guild;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
-    List<EventAttendance> eventAttendance;
+    Set<EventAttendance> eventAttendance;
 
     @Column(nullable = false, name = "event_date")
     OffsetDateTime eventDate;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
+    Set<Screenshot> screenshots;
+
+    @Column(name = "event_status")
+    EventStatus eventStatus;
 }

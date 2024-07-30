@@ -76,7 +76,7 @@ const SwitchWithInputComponentsGenerator: FC<Props> = (
     return (
         <>
             <FormGroup>
-                <FormControlLabel control={<Switch value={enabled} onChange={handleLocalSwitchChange}/>}
+                <FormControlLabel control={<Switch checked={enabled} onChange={handleLocalSwitchChange}/>}
                                   label={translate(fieldTranslateKey)}/>
                 {(enabled && labelTranslateKey) && (<FormHelperText>{translate(labelTranslateKey)}</FormHelperText>)}
                 {(enabled) && data.map((element, index) => (

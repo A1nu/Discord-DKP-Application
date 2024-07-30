@@ -33,6 +33,7 @@
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.29.3",
     "lit": "3.1.4",
+    "moment": "^2.30.1",
     "proj4": "2.11.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -126,7 +127,7 @@
       "workbox-core": "7.1.0",
       "workbox-precaching": "7.1.0"
     },
-    "hash": "0218503dced79ed5e6040b52bc0a988cb285425675cd30d920568ea53fbd20cc"
+    "hash": "746d0309bc828481daf0d666a35ec5e6ec13a87696b9e3be903bb93fb5c96595"
   },
   "overrides": {
     "@vaadin/bundles": "$@vaadin/bundles",
@@ -164,6 +165,7 @@
     "@fontsource/roboto": "$@fontsource/roboto",
     "@mui/icons-material": "$@mui/icons-material",
     "@mui/material": "$@mui/material",
-    "@preact/signals-react": "$@preact/signals-react"
+    "@preact/signals-react": "$@preact/signals-react",
+    "moment": "$moment"
   }
 }

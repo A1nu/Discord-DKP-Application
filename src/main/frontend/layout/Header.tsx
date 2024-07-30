@@ -8,6 +8,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import NavigationDropdown from "Frontend/components/NavigationDropdown";
 import {useAuth} from "Frontend/useAuth";
 import {parseUrl} from "Frontend/util/urlParser";
+import Permission from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/util/Permission";
+import {validatePermissions} from "Frontend/util/permissionValidator";
 
 export type NavigationElementProps = {
     translationKey: string;
@@ -58,7 +60,7 @@ const adminPanel: NavigationDropdownProps = {
 
 function Header() {
     const navigate = useNavigate();
-    const {authenticated} = useAuth();
+    const {authenticated, user} = useAuth();
     const {guildId} = useParams()
 
 
@@ -111,8 +113,9 @@ function Header() {
                                 {navigations.map((navigation: NavigationElementProps) => (
                                     getNavButton(navigation)
                                 ))}
-                                {guildId && (<NavigationDropdown translationKey={adminPanel.translationKey}
-                                                                 children={adminPanel.children}/>)}
+                                {(guildId && validatePermissions(user, Permission.ADMINISTRATOR, guildId)) && (
+                                    <NavigationDropdown translationKey={adminPanel.translationKey}
+                                                        children={adminPanel.children}/>)}
                             </>
                         )}
                     </Box>

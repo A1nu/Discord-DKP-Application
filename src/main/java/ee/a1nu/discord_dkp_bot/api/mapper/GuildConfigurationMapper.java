@@ -2,11 +2,14 @@ package ee.a1nu.discord_dkp_bot.api.mapper;
 
 import ee.a1nu.discord_dkp_bot.api.dto.ApplicationConfigurationDTO;
 import ee.a1nu.discord_dkp_bot.api.dto.RoleDTO;
+import ee.a1nu.discord_dkp_bot.api.util.Action;
+import ee.a1nu.discord_dkp_bot.api.util.ChangeContext;
 import ee.a1nu.discord_dkp_bot.bot.service.DiscordBotService;
 import ee.a1nu.discord_dkp_bot.database.model.GuildConfiguration;
 import ee.a1nu.discord_dkp_bot.database.model.GuildEntity;
 import ee.a1nu.discord_dkp_bot.database.service.GuildConfigurationService;
 import ee.a1nu.discord_dkp_bot.database.service.GuildEntityService;
+import ee.a1nu.discord_dkp_bot.database.service.TransactionService;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -17,15 +20,17 @@ public class GuildConfigurationMapper {
     private final DiscordBotService discordBotService;
     private final GuildConfigurationService guildConfigurationService;
     private final GuildEntityService guildEntityService;
+    private final TransactionService transactionService;
 
     public GuildConfigurationMapper(
             DiscordBotService discordBotService,
             GuildConfigurationService guildConfigurationService,
-            GuildEntityService guildEntityService
-    ) {
+            GuildEntityService guildEntityService,
+            TransactionService transactionService) {
         this.discordBotService = discordBotService;
         this.guildConfigurationService = guildConfigurationService;
         this.guildEntityService = guildEntityService;
+        this.transactionService = transactionService;
     }
 
     public ApplicationConfigurationDTO mapApplicationConfiguration(Long guildId) {
@@ -33,6 +38,7 @@ public class GuildConfigurationMapper {
         if (guildConfiguration == null) {
             GuildEntity guildEntity = guildEntityService.getGuildEntity(guildId);
             guildConfiguration = guildConfigurationService.createGuildConfiguration(guildEntity);
+            transactionService.saveTransaction(guildConfiguration.getCreatorSnowflake(), ChangeContext.CONFIGURATION, guildConfiguration.getId().toString(), Action.CREATE);
             guildEntity.setGuildConfiguration(guildConfiguration);
             guildEntityService.updateGuild(guildEntity);
         }

@@ -5,7 +5,6 @@ import ee.a1nu.discord_dkp_bot.api.dto.HourMinuteDTO;
 import ee.a1nu.discord_dkp_bot.database.model.Encounter;
 import ee.a1nu.discord_dkp_bot.database.model.EncounterSpawn;
 import ee.a1nu.discord_dkp_bot.database.model.SpawnTime;
-import ee.a1nu.discord_dkp_bot.database.service.EncounterSpawnService;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -18,11 +17,6 @@ import java.util.Set;
 @Component
 public class EncounterSpawnMapper {
 
-    private final EncounterSpawnService encounterSpawnService;
-
-    public EncounterSpawnMapper(EncounterSpawnService encounterSpawnService) {
-        this.encounterSpawnService = encounterSpawnService;
-    }
 
     public void mapDtoToEntity(EncounterDTO dto, Encounter encounter, Long userId) {
         if (encounter.getEncounterSpawns() == null) {
@@ -88,7 +82,7 @@ public class EncounterSpawnMapper {
             SpawnTime spawnTime = new SpawnTime();
             spawnTime.setCreatorSnowflake(userId);
             spawnTime.setEncounterSpawn(encounterSpawn);
-            spawnTime.setTime(OffsetTime.of(time.hour(), time.minute(), 0, 0, ZoneOffset.UTC));
+            spawnTime.setTime(OffsetTime.of(time.hour(), time.minute(), 0, 0, ZoneOffset.ofHours(-3)));
 
             spawnTimes.add(spawnTime);
         });

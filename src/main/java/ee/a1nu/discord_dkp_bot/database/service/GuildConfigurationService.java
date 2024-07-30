@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class GuildConfigurationService {
     private final GuildConfigurationRepository guildConfigurationRepository;
+    private final TransactionService transactionService;
 
-    public GuildConfigurationService(GuildConfigurationRepository guildConfigurationRepository) {
+    public GuildConfigurationService(GuildConfigurationRepository guildConfigurationRepository, TransactionService transactionService) {
         this.guildConfigurationRepository = guildConfigurationRepository;
+        this.transactionService = transactionService;
     }
 
     public GuildConfiguration getGuildConfiguration(Long guildId) {
@@ -21,6 +23,10 @@ public class GuildConfigurationService {
         GuildConfiguration guildConfiguration = new GuildConfiguration();
         guildConfiguration.setCreatorSnowflake(0L);
         guildConfiguration.setGuild(guild);
+        return guildConfigurationRepository.save(guildConfiguration);
+    }
+
+    public GuildConfiguration save(GuildConfiguration guildConfiguration) {
         return guildConfigurationRepository.save(guildConfiguration);
     }
 }

@@ -21,7 +21,7 @@ public class SessionService {
 
 
     public Optional<DiscordUserDetails> getUserDetails() {
-        return authContext.getAuthenticatedUser(OAuth2User.class).map(oAuth2User -> userDetailsMapper.map(oAuth2User));
+        return authContext.getAuthenticatedUser(OAuth2User.class).map(userDetailsMapper::map);
     }
 
     public Long getUserId() {
