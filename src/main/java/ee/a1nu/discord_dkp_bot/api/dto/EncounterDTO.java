@@ -24,6 +24,7 @@ public record EncounterDTO(
         List<HourMinuteDTO> thursdaySpawns,
         List<HourMinuteDTO> fridaySpawns,
         List<HourMinuteDTO> saturdaySpawns,
-        List<HourMinuteDTO> sundaySpawns
+        List<HourMinuteDTO> sundaySpawns,
+        ImageDTO imageData
 ) {
 }

@@ -16,6 +16,7 @@ public class GuildEventDTO {
     private LocalDateTime startTime;
     private byte amountOfAttendants;
     private boolean isPrime;
+    private String imageUrl;
 
     public boolean isNew() {
         return id == null || id.isEmpty();

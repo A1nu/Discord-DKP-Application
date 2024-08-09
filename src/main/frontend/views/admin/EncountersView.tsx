@@ -18,6 +18,7 @@ import {
     Paper,
     Select,
     SelectChangeEvent,
+    styled,
     Switch,
     Table,
     TableBody,
@@ -43,6 +44,21 @@ import CircleIcon from '@mui/icons-material/Circle';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import BoltIcon from '@mui/icons-material/Bolt';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import {readAsDataURL} from 'promise-file-reader';
+import ImageDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/ImageDTO";
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 const initialEncounter: EncounterDTO = {
     onFriday: false,
@@ -65,7 +81,8 @@ const initialEncounter: EncounterDTO = {
     thursdaySpawns: [],
     tuesdaySpawns: [],
     wednesdaySpawns: [],
-    weight: 0
+    weight: 0,
+    imageData: undefined
 }
 
 const deleteModalInitialState = {open: false, id: ""}
@@ -89,7 +106,6 @@ export default function EncountersView() {
             setLoading(false);
         }
     }
-
     const saveEncounter = async () => {
         const response = await AdminEndpoint.saveEncounter(guildId, encounter) as ResponseDTO;
         setResponse(response)
@@ -98,7 +114,6 @@ export default function EncountersView() {
             fetchEncounters()
         }
     }
-
     const handleClickOpen = () => {
         setOpen(true)
         setResponse({responseType: "", message: ""})
@@ -107,15 +122,12 @@ export default function EncountersView() {
         setOpen(false);
         setEncounter(initialEncounter)
     }
-
     const handleDeleteModalOpen = (id: string | undefined) => {
         if (id !== undefined) {
             setDeleteModal({open: true, id: id})
         }
     }
-
     const handleCloseDeleteModal = () => setDeleteModal({open: false, id: ""})
-
     const handleEdit = (id: string | undefined) => {
         if (id === undefined) {
             return
@@ -125,7 +137,6 @@ export default function EncountersView() {
             setOpen(true)
         }
     }
-
     const handleDelete = async () => {
         handleCloseDeleteModal();
         const response = AdminEndpoint.deleteEncounter(guildId, deleteModal.id);
@@ -133,7 +144,6 @@ export default function EncountersView() {
             fetchEncounters();
         })
     }
-
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setEncounter({
         ...encounter,
         name: e.currentTarget.value
@@ -160,11 +170,24 @@ export default function EncountersView() {
         [dataKey]: data,
         [switchKey]: update
     });
-
     const handleSave = () => {
         saveEncounter();
     }
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.currentTarget.files) {
+            return
+        }
+        // noinspection TypeScriptValidateTypes
+        const file = await readAsDataURL(e.currentTarget.files[0]);
+        const imageData: ImageDTO = {
+            imageData: file.split(',')[1]
+        }
+        setEncounter({...encounter, imageData})
+    };
 
+    const handleDeleteImage = () => {
+        setEncounter({...encounter, imageData: undefined})
+    }
 
     useEffect(() => {
         fetchEncounters();
@@ -381,6 +404,29 @@ export default function EncountersView() {
                             variant="standard"
                         />
                         <FormHelperText>{translate("admin.encounters.encounterNameHelper")}</FormHelperText>
+                    </FormControl>
+                    <FormControl sx={{my: 2}} fullWidth>
+                        {!encounter.imageData?.imageData ? (
+                            <Button
+                                component="label"
+                                role={undefined}
+                                variant="outlined"
+                                tabIndex={-1}
+                                startIcon={<CloudUploadIcon/>}
+                            >
+                                {translate("admin.encounters.encounterImageUpload")}
+                                <VisuallyHiddenInput type="file" onChange={handleFileUpload}/>
+                            </Button>
+                        ) : (
+                            <Box sx={{display: "flex", justifyContent: "start", alignItems: "center", gap: 2}}>
+                                <img style={{maxHeight: "120px", maxWidth: "250px"}}
+                                     src={`data:image/jpeg;base64,${encounter.imageData.imageData}`} alt={' '}/>
+                                <IconButton onClick={handleDeleteImage}>
+                                    <DeleteForeverIcon/>
+                                </IconButton>
+                            </Box>
+                        )
+                        }
                     </FormControl>
                     <FormGroup>
                         <FormControlLabel

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class MemberPermissions {
+public class MemberPermissionsDTO {
     private String guildId;
     private Set<Permission> permissions;
 }

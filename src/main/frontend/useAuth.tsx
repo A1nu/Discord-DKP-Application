@@ -1,12 +1,12 @@
 import {Context, createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {UserEndpoint} from "Frontend/generated/endpoints";
 import {logout as serverLogout} from '@hilla/frontend';
-import DiscordUserDetails from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/DiscordUserDetails";
 import {REDIRECT_PATH_KEY} from "Frontend/routes";
+import DiscordUserDetailsDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/DiscordUserDetailsDTO";
 
 export function authHook() {
     const [authenticated, setAuthenticated] = useState(false);
-    const [user, setUser] = useState<DiscordUserDetails>();
+    const [user, setUser] = useState<DiscordUserDetailsDTO>();
     const [authInitialized, setAuthInitialized] = useState(false);
 
     async function login() {

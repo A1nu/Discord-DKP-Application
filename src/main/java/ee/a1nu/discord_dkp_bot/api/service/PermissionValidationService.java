@@ -1,9 +1,10 @@
 package ee.a1nu.discord_dkp_bot.api.service;
 
 import discord4j.common.util.Snowflake;
-import ee.a1nu.discord_dkp_bot.api.dto.MemberPermissions;
+import ee.a1nu.discord_dkp_bot.api.dto.MemberPermissionsDTO;
 import ee.a1nu.discord_dkp_bot.api.util.Permission;
 import ee.a1nu.discord_dkp_bot.bot.service.DiscordBotService;
+import ee.a1nu.discord_dkp_bot.database.service.GuildEntityService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -14,10 +15,12 @@ import java.util.stream.Collectors;
 public class PermissionValidationService {
 
     private final DiscordBotService discordBotService;
+    private final GuildEntityService guildEntityService;
 
     public PermissionValidationService(
-            DiscordBotService discordBotService) {
+            DiscordBotService discordBotService, GuildEntityService guildEntityService) {
         this.discordBotService = discordBotService;
+        this.guildEntityService = guildEntityService;
     }
 
     public boolean hasAdministrativePermission(Long guildId, Long memberId) {
@@ -36,9 +39,9 @@ public class PermissionValidationService {
                 discordBotService.isMemberHasMemberRoleAccess(Snowflake.of(memberId), Snowflake.of(guildId));
     }
 
-    public Set<MemberPermissions> mapUserPermissions(long userId) {
+    public Set<MemberPermissionsDTO> mapUserPermissions(long userId) {
         return discordBotService.getBotGuilds(Snowflake.of(userId)).map(guild -> {
-            MemberPermissions permissions = new MemberPermissions();
+            MemberPermissionsDTO permissions = new MemberPermissionsDTO();
             Set<Permission> guildPermissions = new HashSet<>();
             Snowflake memberSnowflake = Snowflake.of(userId);
             if (discordBotService.isMemberAdministrator(memberSnowflake, guild.getId()) ||
@@ -56,5 +59,9 @@ public class PermissionValidationService {
             permissions.setPermissions(guildPermissions);
             return permissions;
         }).collect(Collectors.toSet()).block();
+    }
+
+    public boolean isGuildPremium(Long guildId) {
+        return guildEntityService.getGuildEntity(guildId).getPremium();
     }
 }

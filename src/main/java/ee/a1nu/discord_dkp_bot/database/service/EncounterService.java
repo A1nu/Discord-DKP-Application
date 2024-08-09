@@ -35,4 +35,8 @@ public class EncounterService {
     public Set<Encounter> getScheduledEncounters(Long guildId) {
         return encounterRepository.findAllByGuild_SnowflakeAndScheduledEncounter(guildId, true);
     }
+
+    public Set<Encounter> getOptionalEncounters(Long guildId) {
+        return encounterRepository.findAllByGuild_SnowflakeAndScheduledEncounter(guildId, false);
+    }
 }

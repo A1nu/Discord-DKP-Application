@@ -22,15 +22,15 @@ public class GuildEvent extends BaseEntity {
     @ManyToOne
     GuildEntity guild;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event", orphanRemoval = true)
     Set<EventAttendance> eventAttendance;
 
     @Column(nullable = false, name = "event_date")
     OffsetDateTime eventDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "event")
-    Set<Screenshot> screenshots;
-
     @Column(name = "event_status")
     EventStatus eventStatus;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "id", orphanRemoval = true)
+    Set<ImageData> images;
 }

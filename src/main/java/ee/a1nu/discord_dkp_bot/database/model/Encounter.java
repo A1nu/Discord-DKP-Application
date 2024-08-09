@@ -34,7 +34,17 @@ public class Encounter extends BaseEntity {
     @JoinColumn(name = "guild_id", nullable = false)
     GuildEntity guild;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    ImageData imageData;
+
     public boolean isEveryDay() {
         return encounterSpawns.size() == 1 && encounterSpawns.stream().findFirst().get().isEveryday();
+    }
+
+    public String getImageUrl() {
+        if (imageData == null) {
+            return null;
+        }
+        return "/api/image/" + guild.getSnowflake() + "/" + imageData.getName();
     }
 }

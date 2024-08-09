@@ -3,15 +3,17 @@ package ee.a1nu.discord_dkp_bot.api.mapper;
 import ee.a1nu.discord_dkp_bot.api.dto.EncounterDTO;
 import ee.a1nu.discord_dkp_bot.api.dto.EncountersDataDTO;
 import ee.a1nu.discord_dkp_bot.api.dto.HourMinuteDTO;
+import ee.a1nu.discord_dkp_bot.api.dto.ImageDTO;
+import ee.a1nu.discord_dkp_bot.api.service.ImageService;
 import ee.a1nu.discord_dkp_bot.bot.service.DiscordBotService;
-import ee.a1nu.discord_dkp_bot.database.model.Encounter;
-import ee.a1nu.discord_dkp_bot.database.model.EncounterSpawn;
-import ee.a1nu.discord_dkp_bot.database.model.GuildEntity;
-import ee.a1nu.discord_dkp_bot.database.model.Weight;
+import ee.a1nu.discord_dkp_bot.database.model.*;
 import ee.a1nu.discord_dkp_bot.database.service.GuildEntityService;
 import ee.a1nu.discord_dkp_bot.database.service.WeightService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.ZoneOffset;
 import java.util.Comparator;
@@ -21,16 +23,19 @@ import java.util.Set;
 
 @Component
 public class EncounterMapper {
+    private static final Logger log = LoggerFactory.getLogger(EncounterMapper.class);
     private final DiscordBotService discordBotService;
     private final WeightService weightService;
     private final GuildEntityService guildEntityService;
     private final EncounterSpawnMapper encounterSpawnMapper;
+    private final ImageService imageService;
 
-    public EncounterMapper(DiscordBotService discordBotService, WeightService weightService, GuildEntityService guildEntityService, EncounterSpawnMapper encounterSpawnMapper) {
+    public EncounterMapper(DiscordBotService discordBotService, WeightService weightService, GuildEntityService guildEntityService, EncounterSpawnMapper encounterSpawnMapper, ImageService imageService) {
         this.discordBotService = discordBotService;
         this.weightService = weightService;
         this.guildEntityService = guildEntityService;
         this.encounterSpawnMapper = encounterSpawnMapper;
+        this.imageService = imageService;
     }
 
     public EncountersDataDTO mapToDataDto(GuildEntity guild) {
@@ -92,7 +97,8 @@ public class EncounterMapper {
                 mapSpawnTimesToDto(thursdaySpawn),
                 mapSpawnTimesToDto(fridaySpawn),
                 mapSpawnTimesToDto(saturdaySpawn),
-                mapSpawnTimesToDto(sundaySpawn)
+                mapSpawnTimesToDto(sundaySpawn),
+                mapImageData(encounter)
         );
     }
 
@@ -118,8 +124,26 @@ public class EncounterMapper {
                 List.of(),
                 List.of(),
                 List.of(),
-                List.of()
+                List.of(),
+                mapImageData(encounter)
         );
+    }
+
+    private ImageDTO mapImageData(Encounter encounter) {
+        if (encounter.getImageData() == null) {
+            return null;
+        }
+
+        ImageData imageData = encounter.getImageData();
+
+        try {
+            return new ImageDTO(
+                    imageData.getId().toString(),
+                    imageService.getImageAsBase64(imageData.getName(), encounter.getGuild().getSnowflake())
+            );
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     private List<HourMinuteDTO> mapSpawnTimesToDto(Set<EncounterSpawn> encounterSpawns) {
@@ -163,6 +187,24 @@ public class EncounterMapper {
             encounter.setWeight(weight);
         } else {
             encounter.setWeight(weightService.getWeight((byte) 0));
+        }
+
+        if (dto.imageData() != null && dto.imageData().imageData() != null) {
+            if (encounter.getImageData() == null || !encounter.getImageData().getId().toString().equals(dto.imageData().id())) {
+                try {
+                    String fileName = imageService.saveBase64ImageToStorage(dto.imageData(), guildId);
+                    ImageData imageData = new ImageData();
+                    imageData.setCreatorSnowflake(userId);
+                    imageData.setName(fileName);
+                    imageData.setGuild(guildEntityService.getGuildEntity(guildId));
+                    imageData.setVersion(1L);
+                    encounter.setImageData(imageData);
+                } catch (IOException e) {
+                    log.error("Error while saving image to storage", e);
+                }
+            }
+        } else {
+            encounter.setImageData(null);
         }
         encounterSpawnMapper.mapDtoToEntity(dto, encounter, userId);
         encounter.setScheduledEncounter(dto.scheduledEncounter());

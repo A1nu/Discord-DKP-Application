@@ -30,6 +30,7 @@ public class GuildEntityService {
         GuildEntity guildEntity = new GuildEntity();
         guildEntity.setSnowflake(guildId);
         guildEntity.setCreatorSnowflake(0L);
+        guildEntity.setPremium(false);
         return guildEntityRepository.save(guildEntity);
     }
 

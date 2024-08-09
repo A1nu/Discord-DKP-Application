@@ -1,15 +1,25 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {DashboardEndpoint} from "Frontend/generated/endpoints";
-import DashboardGuildDto from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/DashboardGuildDto";
-import {Avatar, Box, Card, CardActions, CardHeader, CircularProgress, Container, Typography} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    CircularProgress,
+    Container,
+    Typography
+} from "@mui/material";
 import Button from "@mui/material/Button";
 import {translate} from "Frontend/i18n";
 import {useNavigate} from "react-router-dom";
+import DashboardGuildDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/DashboardGuildDTO";
 
 
 export function MainView() {
-    const [guilds, setGuilds] = useState<Array<DashboardGuildDto | undefined>>();
+    const [guilds, setGuilds] = useState<Array<DashboardGuildDTO | undefined>>();
     const [loading, setLoading] = useState(true);
     const [clientId, setClientId] = useState<string | undefined>();
 
@@ -56,14 +66,26 @@ export function MainView() {
                                 <CardHeader
                                     avatar={<Avatar alt={guild?.name} src={guild?.image}/>}
                                     title={guild?.name}/>
-                                <CardActions sx={{display: "flex", justifyContent: "space-between"}}>
-                                    <Button
-                                        onClick={() => redirect(`/${guild?.id}/events`)}>{translate("dashboard.eventsButton")}</Button>
-                                    {
-                                        guild?.isConfigAllowed && <Button
-                                            onClick={() => redirect(`/${guild?.id}/admin/settings`)}>{translate("dashboard.settings")}</Button>
-                                    }
-                                </CardActions>
+                                {
+                                    guild?.isPremium ? (
+                                        <CardActions sx={{display: "flex", justifyContent: "space-between"}}>
+                                            <Button
+                                                onClick={() => redirect(`/${guild?.id}/events`)}>{translate("dashboard.eventsButton")}</Button>
+                                            {
+                                                guild?.isConfigAllowed && <Button
+                                                    onClick={() => redirect(`/${guild?.id}/admin/settings`)}>{translate("dashboard.settings")}</Button>
+                                            }
+                                        </CardActions>
+                                    ) : (
+                                        <CardContent>
+                                            <Typography noWrap={false} variant="body2" color="textSecondary"
+                                                        component="div">
+                                                {translate("dashboard.updatePremium")}
+                                            </Typography>
+                                        </CardContent>
+                                    )
+
+                                }
                             </Card>)
                     }
                 </Box>

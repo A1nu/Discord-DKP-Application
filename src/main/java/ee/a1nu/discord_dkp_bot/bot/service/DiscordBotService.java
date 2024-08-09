@@ -88,4 +88,8 @@ public class DiscordBotService {
         }
         return false;
     }
+
+    public Flux<Member> getGuildMembers(long guildId) {
+        return gatewayDiscordClient.getGuildMembers(Snowflake.of(guildId));
+    }
 }

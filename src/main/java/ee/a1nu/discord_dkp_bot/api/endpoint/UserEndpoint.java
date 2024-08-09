@@ -1,7 +1,7 @@
 package ee.a1nu.discord_dkp_bot.api.endpoint;
 
 import com.vaadin.hilla.Endpoint;
-import ee.a1nu.discord_dkp_bot.api.dto.DiscordUserDetails;
+import ee.a1nu.discord_dkp_bot.api.dto.DiscordUserDetailsDTO;
 import ee.a1nu.discord_dkp_bot.api.service.SessionService;
 import jakarta.annotation.security.PermitAll;
 
@@ -17,7 +17,7 @@ public class UserEndpoint {
         this.sessionService = sessionService;
     }
 
-    public Optional<DiscordUserDetails> getAuthenticatedUser() {
+    public Optional<DiscordUserDetailsDTO> getAuthenticatedUser() {
         return sessionService.getUserDetails();
     }
 

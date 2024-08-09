@@ -14,6 +14,7 @@
   "dashboard.settings": "Config",
   "dashboard.noServers": "No servers available, please invite bot to your server",
   "dashboard.inviteBot": "Invite bot to server",
+  "dashboard.updatePremium": "To obtain functionality please contact application administrator via discord: ainu_",
   "admin.settings.guildName": "'s application configuration",
   "admin.settings.adminRole": "Administrator role",
   "admin.settings.adminRoleHelper": "This role will grant an access for user to all admin functionalities of this application",
@@ -75,5 +76,16 @@
   "admin.encounters.deleteModalText": "This action will delete encounter and all events related to it, maybe better to edit existing, if you want to change something",
   "admin.encounters.deleteModalCancel": "Cancel",
   "admin.encounters.deleteModalProceed": "I know what i am doing",
-  "events.title": "'s Events"
+  "admin.encounters.encounterImageUpload": "Upload image",
+  "events.title": "'s Events",
+  "events.participants": "Participants",
+  "events.addScreenshot": "Add screenshot",
+  "events.upcomingEvent": "Upcoming event",
+  "events.showOnlyPrime": "Show only prime events",
+  "events.addEventButton": "Add event",
+  "events.addEventTitle": "Creating new Event",
+  "events.addEventDescription": "Here you can add a custom event which is created at Encounters, to events list",
+  "events.encounterName": "Select encounter",
+  "events.saveEvent": "Save",
+  "events.cancelSave": "Cancel"
 }

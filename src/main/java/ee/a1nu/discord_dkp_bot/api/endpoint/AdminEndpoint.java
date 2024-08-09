@@ -60,6 +60,10 @@ public class AdminEndpoint {
     }
 
     public ApplicationConfigurationDTO getGuildConfiguration(String guildId) throws EndpointException {
+        if (!permissionValidationService.isGuildPremium(Long.parseLong(guildId))) {
+            throw new EndpointException(new AccessDeniedException());
+        }
+
         if (!permissionValidationService.hasAdministrativePermission(Long.parseLong(guildId), sessionService.getUserId())) {
             throw new EndpointException(new AccessDeniedException());
         }
@@ -67,6 +71,10 @@ public class AdminEndpoint {
     }
 
     public ResponseDTO setGuildConfiguration(String guildId, ApplicationConfigurationDTO configuration) throws EndpointException {
+        if (!permissionValidationService.isGuildPremium(Long.parseLong(guildId))) {
+            throw new EndpointException(new AccessDeniedException());
+        }
+
         if (!permissionValidationService.hasAdministrativePermission(Long.parseLong(guildId), sessionService.getUserId())) {
             throw new EndpointException(new AccessDeniedException());
         }
@@ -91,6 +99,10 @@ public class AdminEndpoint {
     }
 
     public EncountersDataDTO getEncountersData(String guildId) throws EndpointException {
+        if (!permissionValidationService.isGuildPremium(Long.parseLong(guildId))) {
+            throw new EndpointException(new AccessDeniedException());
+        }
+
         if (!permissionValidationService.hasAdministrativePermission(Long.parseLong(guildId), sessionService.getUserId())) {
             throw new EndpointException(new AccessDeniedException());
         }
@@ -101,6 +113,9 @@ public class AdminEndpoint {
     }
 
     public ResponseDTO saveEncounter(String guildId, EncounterDTO encounterDTO) throws EndpointException {
+        if (!permissionValidationService.isGuildPremium(Long.parseLong(guildId))) {
+            throw new EndpointException(new AccessDeniedException());
+        }
 
         if (!permissionValidationService.hasAdministrativePermission(Long.parseLong(guildId), sessionService.getUserId())) {
             throw new EndpointException(new AccessDeniedException());
@@ -144,6 +159,10 @@ public class AdminEndpoint {
     }
 
     public ResponseDTO deleteEncounter(String guildId, String encounterId) throws EndpointException {
+        if (!permissionValidationService.isGuildPremium(Long.parseLong(guildId))) {
+            throw new EndpointException(new AccessDeniedException());
+        }
+
         if (!permissionValidationService.hasAdministrativePermission(Long.parseLong(guildId), sessionService.getUserId())) {
             throw new EndpointException(new AccessDeniedException());
         }

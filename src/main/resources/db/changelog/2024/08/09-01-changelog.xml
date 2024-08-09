@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1722344558815-1" author="ainu">
+    <changeSet id="1723205298228-1" author="ainu">
         <createTable tableName="encounter">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_encounter"/>
@@ -28,9 +28,10 @@
             <column name="guild_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="image_data_id" type="UUID"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-2" author="ainu">
+    <changeSet id="1723205298228-2" author="ainu">
         <createTable tableName="encounter_spawn">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_encounter_spawn"/>
@@ -47,7 +48,7 @@
             <column name="day_of_week" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-3" author="ainu">
+    <changeSet id="1723205298228-3" author="ainu">
         <createTable tableName="encounter_spawn_time">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_encounter_spawn_time"/>
@@ -67,7 +68,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-4" author="ainu">
+    <changeSet id="1723205298228-4" author="ainu">
         <createTable tableName="encounter_weight">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_encounter_weight"/>
@@ -84,7 +85,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-5" author="ainu">
+    <changeSet id="1723205298228-5" author="ainu">
         <createTable tableName="event_attendance">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_event_attendance"/>
@@ -104,7 +105,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-6" author="ainu">
+    <changeSet id="1723205298228-6" author="ainu">
         <createTable tableName="guild">
             <column name="snowflake" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_guild"/>
@@ -114,12 +115,15 @@
             </column>
             <column name="editor_snowflake" type="BIGINT"/>
             <column name="guild_configuration_id" type="UUID"/>
+            <column name="premium" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
             <column name="version" type="BIGINT"/>
             <column name="created_date" type="DATETIME"/>
             <column name="last_modified_date" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-7" author="ainu">
+    <changeSet id="1723205298228-7" author="ainu">
         <createTable tableName="guild_configuration">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_guild_configuration"/>
@@ -142,7 +146,7 @@
             <column name="loot_pretending_days_delay" type="INT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-8" author="ainu">
+    <changeSet id="1723205298228-8" author="ainu">
         <createTable tableName="guild_event">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_guild_event"/>
@@ -166,7 +170,7 @@
             <column name="event_status" type="SMALLINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-9" author="ainu">
+    <changeSet id="1723205298228-9" author="ainu">
         <createTable tableName="guild_member">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_guild_member"/>
@@ -190,7 +194,7 @@
             <column name="member_suspended" type="BOOLEAN"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-10" author="ainu">
+    <changeSet id="1723205298228-10" author="ainu">
         <createTable tableName="guild_member_note">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_guild_member_note"/>
@@ -207,7 +211,26 @@
             <column name="member_id" type="UUID"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-11" author="ainu">
+    <changeSet id="1723205298228-11" author="ainu">
+        <createTable tableName="image">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_image"/>
+            </column>
+            <column name="creator_snowflake" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="editor_snowflake" type="BIGINT"/>
+            <column name="version" type="BIGINT"/>
+            <column name="created_date" type="DATETIME"/>
+            <column name="last_modified_date" type="DATETIME"/>
+            <column name="disposable" type="BOOLEAN"/>
+            <column name="guild_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1723205298228-12" author="ainu">
         <createTable tableName="item_model">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_item_model"/>
@@ -230,7 +253,7 @@
             <column name="guild_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-12" author="ainu">
+    <changeSet id="1723205298228-13" author="ainu">
         <createTable tableName="member">
             <column name="snowflake" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_member"/>
@@ -245,7 +268,7 @@
             <column name="last_modified_date" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-13" author="ainu">
+    <changeSet id="1723205298228-14" author="ainu">
         <createTable tableName="member_configuration">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_member_configuration"/>
@@ -260,7 +283,7 @@
             <column name="member_default_guild" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-14" author="ainu">
+    <changeSet id="1723205298228-15" author="ainu">
         <createTable tableName="personalized_item">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_personalized_item"/>
@@ -288,25 +311,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-15" author="ainu">
-        <createTable tableName="screenshots">
-            <column name="id" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_screenshots"/>
-            </column>
-            <column name="creator_snowflake" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="editor_snowflake" type="BIGINT"/>
-            <column name="version" type="BIGINT"/>
-            <column name="created_date" type="DATETIME"/>
-            <column name="last_modified_date" type="DATETIME"/>
-            <column name="event_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-            <column name="screenshot" type="BLOB"/>
-        </createTable>
-    </changeSet>
-    <changeSet id="1722344558815-16" author="ainu">
+    <changeSet id="1723205298228-16" author="ainu">
         <createTable tableName="transaction">
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction"/>
@@ -322,124 +327,128 @@
             <column name="action" type="SMALLINT"/>
         </createTable>
     </changeSet>
-    <changeSet id="1722344558815-17" author="ainu">
+    <changeSet id="1723205298228-17" author="ainu">
         <addUniqueConstraint columnNames="encounter_weight" constraintName="uc_encounter_weight_encounter_weight"
                              tableName="encounter_weight"/>
     </changeSet>
-    <changeSet id="1722344558815-18" author="ainu">
+    <changeSet id="1723205298228-18" author="ainu">
         <addUniqueConstraint columnNames="guild_id" constraintName="uc_guild_configuration_guild"
                              tableName="guild_configuration"/>
     </changeSet>
-    <changeSet id="1722344558815-19" author="ainu">
+    <changeSet id="1723205298228-19" author="ainu">
         <addUniqueConstraint columnNames="guild_configuration_id" constraintName="uc_guild_guild_configuration"
                              tableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-20" author="ainu">
+    <changeSet id="1723205298228-20" author="ainu">
         <addUniqueConstraint columnNames="member" constraintName="uc_guild_member_member" tableName="guild_member"/>
     </changeSet>
-    <changeSet id="1722344558815-21" author="ainu">
+    <changeSet id="1723205298228-21" author="ainu">
         <addUniqueConstraint columnNames="member_default_guild"
                              constraintName="uc_member_configuration_member_default_guild"
                              tableName="member_configuration"/>
     </changeSet>
-    <changeSet id="1722344558815-22" author="ainu">
+    <changeSet id="1723205298228-22" author="ainu">
         <addUniqueConstraint columnNames="member_configuration" constraintName="uc_member_member_configuration"
                              tableName="member"/>
     </changeSet>
-    <changeSet id="1722344558815-23" author="ainu">
+    <changeSet id="1723205298228-23" author="ainu">
         <addForeignKeyConstraint baseColumnNames="encounter_weight" baseTableName="encounter"
                                  constraintName="FK_ENCOUNTER_ON_ENCOUNTER_WEIGHT" referencedColumnNames="id"
                                  referencedTableName="encounter_weight"/>
     </changeSet>
-    <changeSet id="1722344558815-24" author="ainu">
+    <changeSet id="1723205298228-24" author="ainu">
         <addForeignKeyConstraint baseColumnNames="guild_id" baseTableName="encounter"
                                  constraintName="FK_ENCOUNTER_ON_GUILD" referencedColumnNames="snowflake"
                                  referencedTableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-25" author="ainu">
+    <changeSet id="1723205298228-25" author="ainu">
+        <addForeignKeyConstraint baseColumnNames="image_data_id" baseTableName="encounter"
+                                 constraintName="FK_ENCOUNTER_ON_IMAGEDATA" referencedColumnNames="id"
+                                 referencedTableName="image"/>
+    </changeSet>
+    <changeSet id="1723205298228-26" author="ainu">
         <addForeignKeyConstraint baseColumnNames="encounter_id" baseTableName="encounter_spawn"
                                  constraintName="FK_ENCOUNTER_SPAWN_ON_ENCOUNTER" referencedColumnNames="id"
                                  referencedTableName="encounter"/>
     </changeSet>
-    <changeSet id="1722344558815-26" author="ainu">
+    <changeSet id="1723205298228-27" author="ainu">
         <addForeignKeyConstraint baseColumnNames="encounter_spawn_id" baseTableName="encounter_spawn_time"
                                  constraintName="FK_ENCOUNTER_SPAWN_TIME_ON_ENCOUNTER_SPAWN" referencedColumnNames="id"
                                  referencedTableName="encounter_spawn"/>
     </changeSet>
-    <changeSet id="1722344558815-27" author="ainu">
+    <changeSet id="1723205298228-28" author="ainu">
         <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="event_attendance"
                                  constraintName="FK_EVENT_ATTENDANCE_ON_EVENT" referencedColumnNames="id"
                                  referencedTableName="guild_event"/>
     </changeSet>
-    <changeSet id="1722344558815-28" author="ainu">
+    <changeSet id="1723205298228-29" author="ainu">
         <addForeignKeyConstraint baseColumnNames="guild_member_id" baseTableName="event_attendance"
                                  constraintName="FK_EVENT_ATTENDANCE_ON_GUILD_MEMBER" referencedColumnNames="id"
                                  referencedTableName="guild_member"/>
     </changeSet>
-    <changeSet id="1722344558815-29" author="ainu">
+    <changeSet id="1723205298228-30" author="ainu">
         <addForeignKeyConstraint baseColumnNames="guild_id" baseTableName="guild_configuration"
                                  constraintName="FK_GUILD_CONFIGURATION_ON_GUILD" referencedColumnNames="snowflake"
                                  referencedTableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-30" author="ainu">
+    <changeSet id="1723205298228-31" author="ainu">
         <addForeignKeyConstraint baseColumnNames="event_owner_guild" baseTableName="guild_event"
                                  constraintName="FK_GUILD_EVENT_ON_EVENT_OWNER_GUILD" referencedColumnNames="snowflake"
                                  referencedTableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-31" author="ainu">
+    <changeSet id="1723205298228-32" author="ainu">
         <addForeignKeyConstraint baseColumnNames="guild_event_encounter" baseTableName="guild_event"
                                  constraintName="FK_GUILD_EVENT_ON_GUILD_EVENT_ENCOUNTER" referencedColumnNames="id"
                                  referencedTableName="encounter"/>
     </changeSet>
-    <changeSet id="1722344558815-32" author="ainu">
+    <changeSet id="1723205298228-33" author="ainu">
         <addForeignKeyConstraint baseColumnNames="member_id" baseTableName="guild_member_note"
                                  constraintName="FK_GUILD_MEMBER_NOTE_ON_MEMBER" referencedColumnNames="id"
                                  referencedTableName="guild_member"/>
     </changeSet>
-    <changeSet id="1722344558815-33" author="ainu">
+    <changeSet id="1723205298228-34" author="ainu">
         <addForeignKeyConstraint baseColumnNames="member" baseTableName="guild_member"
                                  constraintName="FK_GUILD_MEMBER_ON_MEMBER" referencedColumnNames="snowflake"
                                  referencedTableName="member"/>
     </changeSet>
-    <changeSet id="1722344558815-34" author="ainu">
+    <changeSet id="1723205298228-35" author="ainu">
         <addForeignKeyConstraint baseColumnNames="member_guild" baseTableName="guild_member"
                                  constraintName="FK_GUILD_MEMBER_ON_MEMBER_GUILD" referencedColumnNames="snowflake"
                                  referencedTableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-35" author="ainu">
+    <changeSet id="1723205298228-36" author="ainu">
         <addForeignKeyConstraint baseColumnNames="guild_configuration_id" baseTableName="guild"
                                  constraintName="FK_GUILD_ON_GUILD_CONFIGURATION" referencedColumnNames="id"
                                  referencedTableName="guild_configuration"/>
     </changeSet>
-    <changeSet id="1722344558815-36" author="ainu">
+    <changeSet id="1723205298228-37" author="ainu">
+        <addForeignKeyConstraint baseColumnNames="guild_id" baseTableName="image" constraintName="FK_IMAGE_ON_GUILD"
+                                 referencedColumnNames="snowflake" referencedTableName="guild"/>
+    </changeSet>
+    <changeSet id="1723205298228-38" author="ainu">
         <addForeignKeyConstraint baseColumnNames="guild_id" baseTableName="item_model"
                                  constraintName="FK_ITEM_MODEL_ON_GUILD" referencedColumnNames="snowflake"
                                  referencedTableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-37" author="ainu">
+    <changeSet id="1723205298228-39" author="ainu">
         <addForeignKeyConstraint baseColumnNames="member_default_guild" baseTableName="member_configuration"
                                  constraintName="FK_MEMBER_CONFIGURATION_ON_MEMBER_DEFAULT_GUILD"
                                  referencedColumnNames="snowflake" referencedTableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-38" author="ainu">
+    <changeSet id="1723205298228-40" author="ainu">
         <addForeignKeyConstraint baseColumnNames="member_configuration" baseTableName="member"
                                  constraintName="FK_MEMBER_ON_MEMBER_CONFIGURATION" referencedColumnNames="id"
                                  referencedTableName="member_configuration"/>
     </changeSet>
-    <changeSet id="1722344558815-39" author="ainu">
+    <changeSet id="1723205298228-41" author="ainu">
         <addForeignKeyConstraint baseColumnNames="guild_id" baseTableName="personalized_item"
                                  constraintName="FK_PERSONALIZED_ITEM_ON_GUILD" referencedColumnNames="snowflake"
                                  referencedTableName="guild"/>
     </changeSet>
-    <changeSet id="1722344558815-40" author="ainu">
+    <changeSet id="1723205298228-42" author="ainu">
         <addForeignKeyConstraint baseColumnNames="item_owner" baseTableName="personalized_item"
                                  constraintName="FK_PERSONALIZED_ITEM_ON_ITEM_OWNER" referencedColumnNames="id"
                                  referencedTableName="guild_member"/>
-    </changeSet>
-    <changeSet id="1722344558815-41" author="ainu">
-        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="screenshots"
-                                 constraintName="FK_SCREENSHOTS_ON_EVENT" referencedColumnNames="id"
-                                 referencedTableName="guild_event"/>
     </changeSet>
 
 </databaseChangeLog>

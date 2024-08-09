@@ -3,7 +3,7 @@ package ee.a1nu.discord_dkp_bot.api.endpoint;
 import com.vaadin.hilla.Endpoint;
 import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.Guild;
-import ee.a1nu.discord_dkp_bot.api.dto.DashboardGuildDto;
+import ee.a1nu.discord_dkp_bot.api.dto.DashboardGuildDTO;
 import ee.a1nu.discord_dkp_bot.api.mapper.GuildMapper;
 import ee.a1nu.discord_dkp_bot.api.service.SessionService;
 import ee.a1nu.discord_dkp_bot.bot.service.DiscordBotService;
@@ -33,7 +33,7 @@ public class DashboardEndpoint {
         this.sessionService = sessionService;
     }
 
-    public List<DashboardGuildDto> getDashboardGuildList() {
+    public List<DashboardGuildDTO> getDashboardGuildList() {
         Flux<Guild> botGuilds = botService.getBotGuilds(Snowflake.of(sessionService.getUserId()));
 
         return guildMapper.guildDTO(botGuilds, sessionService.getUserId());

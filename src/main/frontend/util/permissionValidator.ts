@@ -1,7 +1,7 @@
 import Permission from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/util/Permission";
-import DiscordUserDetails from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/DiscordUserDetails";
+import DiscordUserDetailsDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/DiscordUserDetailsDTO";
 
-export const validatePermissions = (user: DiscordUserDetails | undefined, permission: Permission, guildId: string) => {
+export const validatePermissions = (user: DiscordUserDetailsDTO | undefined, permission: Permission, guildId: string) => {
     if (!user || !permission || !user.permissions || !guildId) {
         return false;
     }

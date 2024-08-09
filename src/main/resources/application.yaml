@@ -4,8 +4,11 @@ server:
     whitelabel:
       enabled: true
 application:
+  dataDir: discord_dkp_bot_data
   defaultValues:
     lootDelay: 30
+    disposeScreenshotsAfterDays: 30
+    disposeUnusedImagesAfterDays: 3
 discord:
 
   cdnUrl: https://cdn.discordapp.com/

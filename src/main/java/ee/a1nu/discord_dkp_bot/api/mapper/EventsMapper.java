@@ -1,6 +1,6 @@
 package ee.a1nu.discord_dkp_bot.api.mapper;
 
-import ee.a1nu.discord_dkp_bot.api.dto.EventViewData;
+import ee.a1nu.discord_dkp_bot.api.dto.EventViewDataDTO;
 import ee.a1nu.discord_dkp_bot.api.dto.GuildEventDTO;
 import ee.a1nu.discord_dkp_bot.api.util.EventStatus;
 import ee.a1nu.discord_dkp_bot.bot.service.DiscordBotService;
@@ -36,6 +36,7 @@ public class EventsMapper {
                             .name(encounter.getName())
                             .startTime(start.plusDays(dayOfWeek.ordinal()).plusHours(time.getHour()).plusMinutes(time.getMinute()).withOffsetSameInstant(ZoneOffset.ofHours(+3)).toLocalDateTime())
                             .isPrime(encounter.isPrimeEncounter())
+                            .imageUrl(encounter.getImageUrl())
                             .build()
             );
         });
@@ -60,11 +61,11 @@ public class EventsMapper {
         events.sort(Comparator.comparing(GuildEventDTO::getStartTime));
     }
 
-    public EventViewData mapEventViewData(long guildId, OffsetDateTime start) {
+    public EventViewDataDTO mapEventViewData(long guildId, OffsetDateTime start) {
         OffsetDateTime startOfWeek = start.withOffsetSameInstant(ZoneOffset.ofHours(+3));
         List<GuildEventDTO> events = new ArrayList<>();
         mapEventsFromGuildEncounters(guildId, startOfWeek, events);
-        return new EventViewData(
+        return new EventViewDataDTO(
                 discordBotService.getGuildName(guildId),
                 startOfWeek.toLocalDateTime(),
                 startOfWeek.plusDays(6).toLocalDateTime(),

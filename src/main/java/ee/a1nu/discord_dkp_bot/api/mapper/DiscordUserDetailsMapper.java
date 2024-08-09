@@ -1,6 +1,6 @@
 package ee.a1nu.discord_dkp_bot.api.mapper;
 
-import ee.a1nu.discord_dkp_bot.api.dto.DiscordUserDetails;
+import ee.a1nu.discord_dkp_bot.api.dto.DiscordUserDetailsDTO;
 import ee.a1nu.discord_dkp_bot.api.service.PermissionValidationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -23,8 +23,8 @@ public class DiscordUserDetailsMapper {
         discordCdnUrl = value;
     }
 
-    public DiscordUserDetails map(OAuth2User oAuth2User) {
-        return new DiscordUserDetails(
+    public DiscordUserDetailsDTO map(OAuth2User oAuth2User) {
+        return new DiscordUserDetailsDTO(
                 Long.parseLong(oAuth2User.getAttributes().get("id").toString()),
                 oAuth2User.getAttributes().get("username").toString(),
                 buildAvatarUrl(oAuth2User.getAttributes()),

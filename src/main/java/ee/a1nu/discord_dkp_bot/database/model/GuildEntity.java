@@ -32,7 +32,7 @@ public class GuildEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "guild", orphanRemoval = true)
     Set<GuildEvent> guildEvents;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "guild_configuration_id")
     GuildConfiguration guildConfiguration;
 
@@ -41,6 +41,9 @@ public class GuildEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "guild", orphanRemoval = true)
     Set<Encounter> guildEncounters;
+
+    @Column(name = "premium", nullable = false)
+    private Boolean premium;
 
     @Version
     private Long version;

@@ -3,6 +3,7 @@ package ee.a1nu.discord_dkp_bot.bot.config;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.Event;
+import discord4j.gateway.intent.IntentSet;
 import ee.a1nu.discord_dkp_bot.bot.events.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,9 @@ public class BotConfiguration {
         try {
             client = DiscordClientBuilder.create(botToken)
                     .build()
+                    .gateway().setEnabledIntents(IntentSet.all())
                     .login()
                     .block();
-
             for (EventListener<T> listener : eventListeners) {
                 assert client != null;
                 client.on(listener.getEventType())
