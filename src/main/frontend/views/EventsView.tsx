@@ -37,11 +37,14 @@ import {useAuth} from "Frontend/useAuth";
 import {validatePermissions} from "Frontend/util/permissionValidator";
 import Permission from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/util/Permission";
 import eventStatus from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/util/EventStatus";
+import EventStatus from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/util/EventStatus";
 import Button from "@mui/material/Button";
 import EventViewModerationDataDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/EventViewModerationDataDTO";
 import {DateTimePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import EventViewDataDTO from "Frontend/generated/ee/a1nu/discord_dkp_bot/api/dto/EventViewDataDTO";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const initialEventData: GuildEventDTO = {
     amountOfAttendants: 0,
@@ -55,6 +58,8 @@ const initialEventData: GuildEventDTO = {
     startTime: ""
 }
 
+const deleteModalInitialState = {open: false, id: ""}
+
 export default function EventsView() {
     const {guildId} = useParams()
     const [loading, setLoading] = useState(true);
@@ -66,6 +71,8 @@ export default function EventsView() {
     const [showAddEventPopup, setShowAddEventPopup] = useState(false);
     const [eventData, setEventData] = useState<GuildEventDTO>(initialEventData);
     const [date, setDate] = useState<Moment | null>(moment());
+    const [deleteModal, setDeleteModal] = useState<{ open: boolean, id: string }>(deleteModalInitialState);
+
     const {user} = useAuth();
 
 
@@ -77,6 +84,13 @@ export default function EventsView() {
             setLoading(false);
             setBackdrop(false);
         }
+    }
+
+    const saveEvent = async () => {
+        const response = EventsEndpoint.saveEvent(guildId, {...eventData, startTime: date?.utc().format().toString()});
+        response.then(() => {
+            fetchEvents();
+        })
     }
 
     const fetchMembers = async () => {
@@ -103,8 +117,14 @@ export default function EventsView() {
     }
 
     const handleShowAddEventPopup = () => setShowAddEventPopup(true)
-    const handleCloseAddEventPopup = () => setShowAddEventPopup(false)
+
+    const handleCloseAddEventPopup = () => {
+        setShowAddEventPopup(false);
+        setEventData(initialEventData);
+    }
+
     const handleSaveEvent = () => {
+        saveEvent();
         setShowAddEventPopup(false)
     }
 
@@ -112,11 +132,25 @@ export default function EventsView() {
         ...eventData,
         encounterId: event.target.value
     })
-    const handleDateValue = () => {
-        if (eventData?.startTime) {
-            return moment(eventData.startTime);
+
+    const handleEventEdit = (event: GuildEventDTO) => {
+        setEventData(event);
+        setShowAddEventPopup(true);
+    }
+
+    const handleDeleteModalOpen = (id: string | undefined) => {
+        if (id !== undefined) {
+            setDeleteModal({open: true, id: id})
         }
-        return moment()
+    }
+    const handleCloseDeleteModal = () => setDeleteModal(deleteModalInitialState);
+
+    const handleDelete = async () => {
+        handleCloseDeleteModal();
+        const response = EventsEndpoint.deleteEvent(guildId, deleteModal.id);
+        response.then(() => {
+            fetchEvents();
+        })
     }
 
     const createDayColumn = () => {
@@ -160,11 +194,20 @@ export default function EventsView() {
                                 return (
                                     <Badge key={index + '-card'} color="secondary" variant="dot"
                                            invisible={event.eventStatus !== eventStatus.MODERATION_REQUIRED}>
-                                        <Card sx={{
+                                        <Card className={'event-card'} sx={{
                                             width: '100%',
                                             backgroundImage: getBackgroundImage(event),
                                             backgroundSize: 'cover',
-                                            backgroundRepeat: 'no-repeat'
+                                            backgroundRepeat: 'no-repeat',
+                                            position: 'relative',
+                                            maxHeight: '90px',
+                                            '&:hover': {
+                                                maxHeight: '120px',
+                                                '& .card-action-buttons-holder, .action-button': {
+                                                    display: 'flex'
+                                                }
+                                            },
+                                            transition: 'max-height 0.3s'
                                         }}>
                                             <CardActionArea
                                                 onClick={() => handleCardOpen(event)}
@@ -214,6 +257,22 @@ export default function EventsView() {
                                                     }
                                                 </CardContent>
                                             </CardActionArea>
+                                            {(event.eventStatus !== EventStatus.TEMPORAL && validatePermissions(user, Permission.MODERATOR, guildId as string)) &&
+                                                <Box
+                                                    className={'card-action-buttons-holder'}
+                                                    sx={{
+                                                        display: 'hidden',
+                                                        flexDirection: 'row',
+                                                        justifyContent: 'start'
+                                                    }}>
+                                                    <IconButton sx={{display: 'none'}} className={'action-button'}
+                                                                size="small"
+                                                                onClick={() => handleEventEdit(event)}><EditIcon/></IconButton>
+                                                    <IconButton sx={{display: 'none'}} className={'action-button'}
+                                                                size="small"
+                                                                onClick={() => handleDeleteModalOpen(event.id)}><DeleteForeverIcon/></IconButton>
+                                                </Box>
+                                            }
                                         </Card>
                                     </Badge>
                                 )
@@ -283,7 +342,7 @@ export default function EventsView() {
                             <IconButton onClick={handleMoveForward}><ArrowForwardIcon/></IconButton>
 
                         </Box>
-                        {(moderationData?.encounterTemplates && moderationData?.encounterTemplates?.length > 0) &&
+                        {(moderationData?.encounterTemplates && moderationData?.encounterTemplates?.length > 0 && validatePermissions(user, Permission.MODERATOR, guildId as string)) &&
                             <Box sx={{
                                 display: 'flex',
                                 justifyContent: 'end',
@@ -352,6 +411,28 @@ export default function EventsView() {
                         onClick={handleCloseAddEventPopup}>{translate("events.cancelSave")}</Button>
                     <Button onClick={() => handleSaveEvent()}>
                         {translate("events.saveEvent")}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={deleteModal.open}
+                onClose={handleCloseDeleteModal}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {translate("events.deleteEventTitle")}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {translate("events.deleteEventText")}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={() => handleCloseDeleteModal()}>{translate("events.deleteEventCancel")}</Button>
+                    <Button onClick={() => handleDelete()}>
+                        {translate("events.deleteEventProceed")}
                     </Button>
                 </DialogActions>
             </Dialog>

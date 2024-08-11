@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DiffGenerationConfig">
-    <option name="sourceModelValue" value="Default" />
-    <option name="targetDbValue" value="e9da3b7c-9afb-4670-8594-7e0bccf5e583__discord-bot-dev_public" />
+    <option name="sourceModelValue" value="discord_dkp_bot:discord_dkp_bot" />
+    <option name="targetDbValue" value="e9da3b7c-9afb-4670-8594-7e0bccf5e583" />
   </component>
 </project>

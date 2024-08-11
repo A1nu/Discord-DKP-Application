@@ -87,5 +87,9 @@
   "events.addEventDescription": "Here you can add a custom event which is created at Encounters, to events list",
   "events.encounterName": "Select encounter",
   "events.saveEvent": "Save",
-  "events.cancelSave": "Cancel"
+  "events.cancelSave": "Cancel",
+  "events.deleteEventTitle": "Are you sure you want to delete Event?",
+  "events.deleteEventText": "This action will delete event and all data related to this event including uploaded screenshots, think twice before proceed.",
+  "events.deleteEventCancel": "Cancel",
+  "events.deleteEventProceed": "I am confident with my actions and willing to proceed"
 }

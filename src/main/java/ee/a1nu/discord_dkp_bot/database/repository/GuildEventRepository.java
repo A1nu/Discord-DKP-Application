@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
 public interface GuildEventRepository extends JpaRepository<GuildEvent, UUID> {
-    GuildEvent findFirstByEncounterAndEventDateBetween(Encounter encounter, OffsetDateTime start, OffsetDateTime end);
+    Set<GuildEvent> findAllByEncounterAndEventDateBetween(Encounter encounter, OffsetDateTime start, OffsetDateTime end);
 }
